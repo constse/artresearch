@@ -8,4 +8,4 @@
 /bin
 /vendor
 /app/bootstrap.php.cache
-/web/uploads
+/web/web/pictures
