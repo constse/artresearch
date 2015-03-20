@@ -1,0 +1,42 @@
+{% extends 'ArtMainBundle::layout.html.twig' %}
+
+{% block head_additions %}
+    <style>
+        table th { text-align: left; }
+        table th, table td { padding: 5px 20px 5px 5px; }
+    </style>
+{% endblock %}
+
+{% block panel %}{% endblock %}
+
+{% block content %}
+    <h1>Участники исследования</h1>
+    <div style="padding:20px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Никнейм</th>
+                    <th>Пол</th>
+                    <th>Писал маслом</th>
+                    <th>Возраст</th>
+                    <th>Худ. образование</th>
+                    <th>E-mail</th>
+                    <th>Экспорт</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                    <tr>
+                        <td>{{ u.nickname|e }}</td>
+                        <td>{% if u.sex == 'male' %}Мужской{% else %}Женский{% endif %}</td>
+                        <td>{% if u.oil %}Да{% else %}Нет{% endif %}</td>
+                        <td>{{ u.age|e }}</td>
+                        <td>{% if u.education %}Да{% else %}Нет{% endif %}</td>
+                        <td>{% if u.email is not empty %}{{ u.email|e }}{% else %}&mdash;{% endif %}</td>
+                        <td><a href="{{ path('export', {'user': u.id}) }}">Выгрузить</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

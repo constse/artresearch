@@ -9,6 +9,12 @@ add_picture:
 
 # 2
 
+export:
+  path: /export/{user}
+  defaults: { _controller: "ArtMainBundle:Main:export" }
+  requirements:
+    user: \d+
+
 update_counters:
   path: /ajax/update-counters
   defaults: { _controller: "ArtMainBundle:Main:updateCounters" }
@@ -20,6 +26,10 @@ mark:
     mark: \d+
 
 # 1
+
+admin:
+  path: /admin
+  defaults: { _controller: "ArtMainBundle:Main:admin" }
 
 finish:
   path: /finish

@@ -3,6 +3,7 @@
 namespace Art\MainBundle\Controller;
 
 use Art\MainBundle\Entity\Mark;
+use Art\MainBundle\Entity\User;
 use Art\MainBundle\Form\FinishForm;
 use Art\MainBundle\Form\MarkForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -130,6 +131,148 @@ class MainController extends InitializableController
         $this->response->setContent($this->renderView('ArtMainBundle:main:finish.html.twig', array(
             'form' => $form->createView()
         )));
+
+        return $this->response;
+    }
+
+    public function adminAction()
+    {
+        $users = $this->getRepository('User')->createQueryBuilder('u')
+            ->where('u.finished = :finished')
+            ->setParameters(array('finished' => true))
+            ->orderBy('u.modifiedAt', 'DESC')
+            ->getQuery()->getResult();
+
+        $this->response->setContent($this->renderView('ArtMainBundle:main:admin.html.twig', array(
+            'users' => $users
+        )));
+
+        return $this->response;
+    }
+
+    public function exportAction($user)
+    {
+        /** @var User $user */
+        $user = $this->getRepository('User')->find($user);
+        $excel = '';
+        $names = array(
+            'Svetlaya-Tyomnaya',
+            'Yarkaya-Tusklaya',
+            'Horoshaya-Plohaya',
+            'Aktivnaya-Passivnaya',
+            'Tyoplaya-Holodnaya',
+            'Radostnaya-Grustnaya',
+            'Solnechnaya-Pasmurnaya',
+            'Blizkaya-Dalyokaya',
+            'Buduschee-Proshloe',
+            'Priyatnaya-Ottalkivayuschaya',
+            'Facturnaya-Sglazhennaya',
+            'Garmonichnaya-Disgarmonichnaya',
+            'Aromatnaya-Udushlivaya',
+            'Legkaya-Tyazhyolaya',
+            'Prostaya-Slozhnaya',
+            'Krasivaya-Urodlivaya',
+            'Effektnaya-Obychnaya',
+            'Fantasticheskaya-Realnaya',
+            'Letnyaya-Zimnyaya',
+            'Haotichnaya-Uporyadochennaya',
+            'Ekspressivnaya-Spokojnaya',
+            'Detalnaya-Razmytaya',
+            'Raznotsvetnaya-Monohromnaya',
+            'Obyomnaya-Ploskaya',
+            'Vzroslaya-Detskaya',
+            'Podvizhnaya-Statichnaya',
+            'Grubaya-Nezhnaya',
+            'Agressivnaya-Uravnoveshennaya',
+            'Originalnaya-Banalnaya',
+            'Otchetlivaya-Zatumanennaya'
+        );
+
+        $select = 'p.number AS pic';
+
+        for ($i = 1; $i <= 30; $i++) $select .= ', m.mark' . $i . ' AS m' . $i;
+
+        $pictures = array();
+
+        foreach ($user->getLike() as $picture) $pictures[] = $picture->getId();
+
+        $marks = $this->getRepository('Mark')->createQueryBuilder('m')
+            ->select($select)
+            ->leftJoin('m.picture', 'p')
+            ->where('m.user = :user')
+            ->andWhere('p.id IN (:pictures)')
+            ->setParameters(array('user' => $user, 'pictures' => $pictures))
+            ->getQuery()->getArrayResult();
+
+        $excel .= "\"Nravyatsya\"\r\n\"\";";
+
+        foreach ($marks as $mark) $excel .= "\"" . $mark['pic'] . "\";";
+
+        $excel .= "\r\n";
+
+        for ($i = 1; $i <= 30; $i++) {
+            $excel .= "\"" . $names[$i - 1] . "\";";
+
+            foreach ($marks as $mark) $excel .= "\"" . str_replace('.', ',', $mark['m' . $i]) . "\";";
+
+            $excel .= "\r\n";
+        }
+
+        $pictures = array();
+
+        foreach ($user->getDislike() as $picture) $pictures[] = $picture->getId();
+
+        $marks = $this->getRepository('Mark')->createQueryBuilder('m')
+            ->select($select)
+            ->leftJoin('m.picture', 'p')
+            ->where('m.user = :user')
+            ->andWhere('p.id IN (:pictures)')
+            ->setParameters(array('user' => $user, 'pictures' => $pictures))
+            ->getQuery()->getArrayResult();
+
+        $excel .= "\r\n\"Ottalkivaet\";\r\n\"\";";
+
+        foreach ($marks as $mark) $excel .= "\"" . $mark['pic'] . "\";";
+
+        $excel .= "\r\n";
+
+        for ($i = 1; $i <= 30; $i++) {
+            $excel .= "\"" . $names[$i - 1] . "\";";
+
+            foreach ($marks as $mark) $excel .= "\"" . str_replace('.', ',', $mark['m' . $i]) . "\";";
+
+            $excel .= "\r\n";
+        }
+
+        $pictures = array();
+
+        foreach ($user->getSelf() as $picture) $pictures[] = $picture->getId();
+
+        $marks = $this->getRepository('Mark')->createQueryBuilder('m')
+            ->select($select)
+            ->leftJoin('m.picture', 'p')
+            ->where('m.user = :user')
+            ->andWhere('p.id IN (:pictures)')
+            ->setParameters(array('user' => $user, 'pictures' => $pictures))
+            ->getQuery()->getArrayResult();
+
+        $excel .= "\r\n\"Sam by napisal\";\r\n\"\";";
+
+        foreach ($marks as $mark) $excel .= "\"" . $mark['pic'] . "\";";
+
+        $excel .= "\r\n";
+
+        for ($i = 1; $i <= 30; $i++) {
+            $excel .= "\"" . $names[$i - 1] . "\";";
+
+            foreach ($marks as $mark) $excel .= "\"" . str_replace('.', ',', $mark['m' . $i]) . "\";";
+
+            $excel .= "\r\n";
+        }
+
+        $this->response->headers->set('Content-Type', 'text/csv');
+        $this->response->headers->set('Content-Disposition', 'attachment; filename=export.csv');
+        $this->response->setContent($excel);
 
         return $this->response;
     }
