@@ -76,7 +76,7 @@
                     var number = $(this).parent().attr('data-number');
                     var action = $(this).attr('id');
                     $.ajax({
-                        'url': '/app_dev.php/add-picture/' + action + '/' + number,
+                        'url': '{{ path('pictures') }}add-picture/' + action + '/' + number,
                         'dataType': 'json',
                         'cache': false,
                         'success': function (data) {
