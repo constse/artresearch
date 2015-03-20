@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Живописное произведение как индикатор актуальной жизненной ситуации</title>
+    <meta name="author" content="const-se.ru">
+    <style>
+        body { margin: 0; padding: 0; }
+        .panel { background: #ccc; padding: 15px; }
+    </style>
+    {% block head_additions %}{% endblock %}
+</head>
+<body>
+    <div class="panel">
+        <a href="#">Нравится ({{ user.like|length }})</a> |
+        <a href="#">Отталкивает ({{ user.dislike|length }})</a> |
+        <a href="#">Написал бы сам ({{ user.self|length }})</a>
+    </div>
+    {% block content %}{% endblock %}
+    {% block body_addititons %}{% endblock %}
+</body>
+</html>

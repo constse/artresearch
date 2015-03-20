@@ -1,3 +1,7 @@
-app:
-    resource: @AppBundle/Controller/
-    type:     annotation
+# 1
+
+pictures:
+  path: /{page}
+  defaults: { _controller: "ArtMainBundle:Main:pictures", page: 1 }
+  requirements:
+    page: \d

@@ -1,0 +1,25 @@
+{% extends 'ArtMainBundle::layout.html.twig' %}
+
+{% block head_additions %}
+    <style>
+        .paginator { text-align: center; }
+        .paginator a { font-size: 20px; display: inline-block; border: 1px solid #ccc; border-radius: 6px; padding: 10px 20px; margin: 0 10px; }
+        .paginator a.active { background: #eee; }
+        .paginator a:hover, .paginator:focus { background: #ccc; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Картины</h1>
+    {% for picture in pictures %}
+        <img src="/pictures/{{ picture.number }}.jpg" height="200">
+    {% endfor %}
+    <br><br>
+    <div class="paginator">
+        <a href="{{ path('pictures', {'page': 1}) }}"{% if page == 1 %} class="active"{% endif %}>1</a>
+        <a href="{{ path('pictures', {'page': 2}) }}"{% if page == 2 %} class="active"{% endif %}>2</a>
+        <a href="{{ path('pictures', {'page': 3}) }}"{% if page == 3 %} class="active"{% endif %}>3</a>
+        <a href="{{ path('pictures', {'page': 4}) }}"{% if page == 4 %} class="active"{% endif %}>4</a>
+        <a href="{{ path('pictures', {'page': 5}) }}"{% if page == 5 %} class="active"{% endif %}>5</a>
+    </div>
+{% endblock %}
