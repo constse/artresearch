@@ -14,14 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
 class User extends AbstractEntity
 {
     /**
-     * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity = "Art\MainBundle\Entity\Picture")
-     * @ORM\JoinTable(name = "user_like",
-     *   joinColumns = {@ORM\JoinColumn(name = "userid", referencedColumnName = "id")},
-     *   inverseJoinColumns = {@ORM\JoinColumn(name = "pictureid", referencedColumnName = "id")}
-     * )
+     * @var int
+     * @ORM\Column(name = "age", type = "integer", nullable = true)
      */
-    protected $like;
+    protected $age;
 
     /**
      * @var ArrayCollection
@@ -34,6 +30,34 @@ class User extends AbstractEntity
     protected $dislike;
 
     /**
+     * @var bool
+     * @ORM\Column(name = "education", type = "boolean", nullable = true)
+     */
+    protected $education;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity = "Art\MainBundle\Entity\Picture")
+     * @ORM\JoinTable(name = "user_like",
+     *   joinColumns = {@ORM\JoinColumn(name = "userid", referencedColumnName = "id")},
+     *   inverseJoinColumns = {@ORM\JoinColumn(name = "pictureid", referencedColumnName = "id")}
+     * )
+     */
+    protected $like;
+
+    /**
+     * @var string
+     * @ORM\Column(name = "nickname", type = "string", nullable = true)
+     */
+    protected $nickname;
+
+    /**
+     * @var bool
+     * @ORM\Column(name = "oil", type = "boolean", nullable = true)
+     */
+    protected $oil;
+
+    /**
      * @var ArrayCollection
      * @ORM\ManyToMany(targetEntity = "Art\MainBundle\Entity\Picture")
      * @ORM\JoinTable(name = "user_self",
@@ -42,6 +66,12 @@ class User extends AbstractEntity
      * )
      */
     protected $self;
+
+    /**
+     * @var string
+     * @ORM\Column(name = "sex", type = "string", nullable = true)
+     */
+    protected $sex;
 
     public function __construct()
     {
@@ -52,7 +82,18 @@ class User extends AbstractEntity
         $this->self = new ArrayCollection();
     }
 
-    public function getLike() { return $this->like; }
+    public function getAge() { return $this->age; }
     public function getDislike() { return $this->dislike; }
+    public function getEducation() { return $this->education; }
+    public function getLike() { return $this->like; }
+    public function getNickname() { return $this->nickname; }
+    public function getOil() { return $this->oil; }
     public function getSelf() { return $this->self; }
+    public function getSex() { return $this->sex; }
+
+    public function setAge($age) { $this->age = $age; return $this; }
+    public function setEducation($education) { $this->education = $education; return $this; }
+    public function setNickname($nickname) { $this->nickname = $nickname; return $this; }
+    public function setOil($oil) { $this->oil = $oil; return $this; }
+    public function setSex($sex) { $this->sex = $sex; return $this; }
 } 

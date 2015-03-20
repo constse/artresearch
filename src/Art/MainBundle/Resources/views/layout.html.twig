@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <title>Живописное произведение как индикатор актуальной жизненной ситуации</title>
     <meta name="author" content="const-se.ru">
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <style>
-        body { margin: 0; padding: 0; }
+        html { height: 100%; width: 100%; }
+        body { margin: 0; padding: 0; position: relative; height: 100%; width: 100%; }
         .panel { background: #ccc; padding: 15px; }
     </style>
     {% block head_additions %}{% endblock %}
 </head>
 <body>
     <div class="panel">
-        <a href="#">Нравится ({{ user.like|length }})</a> |
-        <a href="#">Отталкивает ({{ user.dislike|length }})</a> |
-        <a href="#">Написал бы сам ({{ user.self|length }})</a>
+        Нравится (<span id="like-count">{{ user.like|length }}</span>) |
+        Отталкивает (<span id="dislike-count">{{ user.dislike|length }}</span>) |
+        Написал бы сам (<span id="self-count">{{ user.self|length }}</span>) |
+        <a href="#">Закончить отбор</a>
     </div>
     {% block content %}{% endblock %}
-    {% block body_addititons %}{% endblock %}
+    {% block body_additions %}{% endblock %}
 </body>
 </html>

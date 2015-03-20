@@ -1,3 +1,24 @@
+# 3
+
+add_picture:
+  path: /add-picture/{action}/{number}
+  defaults: { _controller: "ArtMainBundle:Main:addPicture" }
+  requirements:
+    action: like|dislike|self
+    number: \d+
+
+# 2
+
+update_counters:
+  path: /ajax/update-counters
+  defaults: { _controller: "ArtMainBundle:Main:updateCounters" }
+
+selected_pictures:
+  path: /selected/{category}
+  defaults: { _controller: "ArtMainBundle:Main:selected" }
+  requirements:
+    category: like|dislike|self
+
 # 1
 
 pictures:
