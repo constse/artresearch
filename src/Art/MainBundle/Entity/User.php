@@ -85,6 +85,12 @@ class User extends AbstractEntity
      */
     protected $marks;
 
+    /**
+     * @var bool
+     * @ORM\Column(name = "finished", type = "boolean")
+     */
+    protected $finished;
+
     public function __construct()
     {
         parent::__construct();
@@ -96,6 +102,7 @@ class User extends AbstractEntity
         $this->oil = false;
         $this->age = 18;
         $this->education = false;
+        $this->finished = false;
     }
 
     public function getAge() { return $this->age; }
@@ -108,6 +115,7 @@ class User extends AbstractEntity
     public function getSelf() { return $this->self; }
     public function getSex() { return $this->sex; }
     public function getMarks() { return $this->marks; }
+    public function getFinished() { return $this->finished; }
 
     public function setAge($age) { $this->age = $age; return $this; }
     public function setEducation($education) { $this->education = $education; return $this; }
@@ -115,4 +123,5 @@ class User extends AbstractEntity
     public function setNickname($nickname) { $this->nickname = $nickname; return $this; }
     public function setOil($oil) { $this->oil = $oil; return $this; }
     public function setSex($sex) { $this->sex = $sex; return $this; }
+    public function setFinished($finished) { $this->finished = $finished; return $this; }
 } 

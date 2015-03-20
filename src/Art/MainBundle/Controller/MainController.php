@@ -120,6 +120,7 @@ class MainController extends InitializableController
         $form->handleRequest($this->request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->user->setFinished(true);
             $this->manager->persist($this->user);
             $this->manager->flush();
 
