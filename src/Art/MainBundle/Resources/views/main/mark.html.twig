@@ -1,0 +1,105 @@
+{% extends 'ArtMainBundle::layout.html.twig' %}
+
+{% block head_additions %}
+    <link rel="stylesheet" href="{{ asset('/jquery-ui/jquery-ui.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/jquery-ui/jquery-ui.structure.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/jquery-ui/jquery-ui.theme.min.css') }}">
+    <script src="{{ asset('/jquery-ui/jquery-ui.min.js') }}"></script>
+    <style>
+        .instructions { padding: 20px 20px 0; }
+        .picture { text-align: center; height: 600px; padding: 20px 20px 0; }
+        .picture img { border: 0; height: 100%; }
+        form { padding: 20px 20px 40px; }
+        form table { margin: 0 auto; }
+        form table td { padding: 5px; }
+    </style>
+{% endblock %}
+
+{% block panel %}{% endblock %}
+
+{% block content %}
+    <div class="instructions">
+        Передвигая ползунок, оцените близость картины к тому или иному полюсу.<br>
+        Чем ближе ползунок к полюсу, тем больше эта характеристика выражена в картине, по вашему мнению.
+    </div>
+    <div class="instructions" style="text-align: center;">
+        <strong>
+            {% if category == 'like' %}Вам понравилась эта картина
+            {% elseif category == 'dislike' %}Эта картина Вас оттлакивает
+            {% elseif category == 'self' %}Эту картину Вы хотели бы нарисовать сами
+            {% endif %}
+        </strong>
+    </div>
+    <div class="picture"><img src="/web/pictures/{{ picture.number }}.jpg"></div>
+    {% set names = [
+        {'left': 'Светлая', 'right': 'Темная'},
+        {'left': 'Яркая', 'right': 'Тусклая'},
+        {'left': 'Хорошая', 'right': 'Плохая'},
+        {'left': 'Активная', 'right': 'Пассивная'},
+        {'left': 'Теплая', 'right': 'Холодная'},
+        {'left': 'Радостная', 'right': 'Грустная'},
+        {'left': 'Солнечная', 'right': 'Пасмурная'},
+        {'left': 'Близкая', 'right': 'Далекая'},
+        {'left': 'Будущее', 'right': 'Прошлое'},
+        {'left': 'Приятная', 'right': 'Отталкивающая'},
+        {'left': 'Фактурная', 'right': 'Сглаженная'},
+        {'left': 'Гармоничная', 'right': 'Дисгармоничная'},
+        {'left': 'Ароматная', 'right': 'Удушливая'},
+        {'left': 'Легкая', 'right': 'Тяжелая'},
+        {'left': 'Простая', 'right': 'Сложная'},
+        {'left': 'Красивая', 'right': 'Уродливая'},
+        {'left': 'Эффектная', 'right': 'Обычная'},
+        {'left': 'Фантастическая', 'right': 'Реальная'},
+        {'left': 'Летняя', 'right': 'Зимняя'},
+        {'left': 'Хаотичная', 'right': 'Упорядоченная'},
+        {'left': 'Экспрессивная', 'right': 'Спокойная'},
+        {'left': 'Детальная', 'right': 'Размытая'},
+        {'left': 'Разноцветная', 'right': 'Монохромная'},
+        {'left': 'Объемная', 'right': 'Плоская'},
+        {'left': 'Взрослая', 'right': 'Детская'},
+        {'left': 'Подвижная', 'right': 'Статичная'},
+        {'left': 'Грубая', 'right': 'Нежная'},
+        {'left': 'Агрессивная', 'right': 'Уравновешенная'},
+        {'left': 'Оригинальная', 'right': 'Банальная'},
+        {'left': 'Отчетливая', 'right': 'затуманенная'}
+    ] %}
+    {{ form_start(form) }}
+    <table>
+        {% for i in 1..30 %}
+            <tr>
+                <td>{{ names[i - 1].left }}</td>
+                <td style="width:400px;">
+                    {{ form_widget(form['mark' ~ i]) }}
+                    <div class="slider" data-value="{{ form['mark' ~ i].vars.data }}"></div>
+                </td>
+                <td>{{ names[i - 1].right }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td></td><td style="text-align: center;">
+                {% if step > 1 %}<a href="{{ path('mark', {'step': step - 1}) }}">Назад</a>{% endif %}
+                <button type="submit">Далее</button>
+            </td><td></td>
+        </tr>
+    </table>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block body_additions %}
+    <script>
+        $(document).ready(function() {
+            $('.slider').each(function() {
+                var value = $(this).parent().find('input').val() * 10;
+                var slider = $(this).slider({
+                    min: 0,
+                    max: 100,
+                    value: 50,
+                    slide: function(event, ui) {
+                        $(this).parent().find('input').val(ui.value / 10.0);
+                    }
+                });
+                slider.slider('value', value);
+            });
+        });
+    </script>
+{% endblock %}

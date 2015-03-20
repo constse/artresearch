@@ -1,0 +1,29 @@
+{% extends 'ArtMainBundle::layout.html.twig' %}
+
+{% block head_additions %}
+    <style>
+        .instructions { padding: 20px 20px 0; }
+        form { width: 300px; margin: 20px auto 40px; }
+        form div { padding: 10px 0 10px; }
+        form input { width: 100%; }
+        form select { width: 100%; }
+        form div label { display: block; }
+    </style>
+{% endblock %}
+
+{% block panel %}{% endblock %}
+
+{% block content %}
+    <div class="instructions" style="text-align: center;">
+        <strong>Спасибо за Вашу помощь в проведении исследования!</strong>
+    </div>
+    {{ form_start(form) }}
+    {{ form_row(form.nickname) }}
+    {{ form_row(form.sex) }}
+    {{ form_row(form.oil) }}
+    {{ form_row(form.age) }}
+    {{ form_row(form.education) }}
+    <p>Если Вы хотите узнать результаты, то укажите, пожалуйста, Ваш e-mail.</p>
+    {{ form_row(form.email) }}
+    {{ form_end(form) }}
+{% endblock %}

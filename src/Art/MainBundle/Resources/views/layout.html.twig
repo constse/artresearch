@@ -13,12 +13,14 @@
     {% block head_additions %}{% endblock %}
 </head>
 <body>
-    <div class="panel">
-        Нравится (<span id="like-count">{{ user.like|length }}</span>) |
-        Отталкивает (<span id="dislike-count">{{ user.dislike|length }}</span>) |
-        Написал бы сам (<span id="self-count">{{ user.self|length }}</span>) |
-        <a href="#">Закончить отбор</a>
-    </div>
+    {% block panel %}
+        <div class="panel">
+            Нравится (<span id="like-count">{{ user.like|length }}</span>) |
+            Отталкивает (<span id="dislike-count">{{ user.dislike|length }}</span>) |
+            Написал бы сам (<span id="self-count">{{ user.self|length }}</span>) |
+            <a href="{{ path('mark', {'step': 1}) }}">Закончить отбор</a>
+        </div>
+    {% endblock %}
     {% block content %}{% endblock %}
     {% block body_additions %}{% endblock %}
 </body>

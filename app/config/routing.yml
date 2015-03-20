@@ -13,13 +13,17 @@ update_counters:
   path: /ajax/update-counters
   defaults: { _controller: "ArtMainBundle:Main:updateCounters" }
 
-selected_pictures:
-  path: /selected/{category}
-  defaults: { _controller: "ArtMainBundle:Main:selected" }
+mark:
+  path: /mark/{step}
+  defaults: { _controller: "ArtMainBundle:Main:mark" }
   requirements:
-    category: like|dislike|self
+    mark: \d+
 
 # 1
+
+finish:
+  path: /finish
+  defaults: { _controller: "ArtMainBundle:Main:finish" }
 
 pictures:
   path: /{page}

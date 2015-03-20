@@ -2,6 +2,9 @@
 
 namespace Art\MainBundle\Controller;
 
+use Art\MainBundle\Entity\Mark;
+use Art\MainBundle\Form\FinishForm;
+use Art\MainBundle\Form\MarkForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class MainController extends InitializableController
@@ -51,5 +54,82 @@ class MainController extends InitializableController
         $this->manager->flush();
 
         return new JsonResponse('ok');
+    }
+
+    public function markAction($step)
+    {
+        $likes = $this->user->getLike()->count();
+        $dislikes = $this->user->getDislike()->count();
+        $selfs = $this->user->getSelf()->count();
+        $steps = $likes + $dislikes + $selfs;
+
+        if ($step > $steps) return $this->redirectToRoute('finish');
+
+        $picture = null;
+        $category = '';
+
+        if ($step <= $likes) {
+            $picture = $this->user->getLike()->toArray()[$step - 1];
+            $category = 'like';
+        }
+        elseif ($step <= $likes + $dislikes) {
+            $picture = $this->user->getDislike()->toArray()[$step - $likes - 1];
+            $category = 'dislike';
+        }
+        else {
+            $picture = $this->user->getSelf()->toArray()[$step - $likes - $dislikes - 1];
+            $category = 'self';
+        }
+
+        $mark = $this->getRepository('Mark')->createQueryBuilder('m')
+            ->where('m.user = :user')
+            ->andWhere('m.picture = :picture')
+            ->setParameters(array('user' => $this->user, 'picture' => $picture))
+            ->getQuery()->getOneOrNullResult();
+
+        if (is_null($mark)) {
+            $mark = new Mark();
+            $mark->setUser($this->user)->setPicture($picture);
+            $this->manager->persist($mark);
+            $this->manager->flush();
+        }
+
+        $form = $this->createForm(new MarkForm(), $mark);
+        $form->handleRequest($this->request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->manager->persist($mark);
+            $this->manager->flush();
+
+            return $this->redirectToRoute('mark', array('step' => $step + 1));
+        }
+
+        $this->response->setContent($this->renderView('ArtMainBundle:main:mark.html.twig', array(
+            'picture' => $picture,
+            'step' => $step,
+            'form' => $form->createView(),
+            'category' => $category
+        )));
+
+        return $this->response;
+    }
+
+    public function finishAction()
+    {
+        $form = $this->createForm(new FinishForm(), $this->user);
+        $form->handleRequest($this->request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->manager->persist($this->user);
+            $this->manager->flush();
+
+            return $this->redirectToRoute('pictures');
+        }
+
+        $this->response->setContent($this->renderView('ArtMainBundle:main:finish.html.twig', array(
+            'form' => $form->createView()
+        )));
+
+        return $this->response;
     }
 } 
