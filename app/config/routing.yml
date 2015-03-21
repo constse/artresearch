@@ -25,6 +25,10 @@ mark:
   requirements:
     mark: \d+
 
+check_picture:
+  path: /check-picture/{number}
+  defaults: { _controller: "ArtMainBundle:Main:checkPicture" }
+
 # 1
 
 admin:

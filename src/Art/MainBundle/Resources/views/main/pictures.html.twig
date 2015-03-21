@@ -65,6 +65,19 @@
             });
         }
 
+        function checkPicture(number) {
+            $.ajax({
+                'url': '{{ path('pictures') }}check-picture/' + number,
+                'dataType': 'json',
+                'cache': false,
+                'success': function(data) {
+                    if (data == 'like') $('#like').prop('checked', true);
+                    if (data == 'dislike') $('#dislike').prop('checked', true);
+                    if (data == 'self') $('#self').prop('checked', true);
+                }
+            })
+        }
+
         function fadeClose() {
             $('.fade-content').stop(true, true).fadeOut();
             $('.fade').stop(true, true).fadeOut();
@@ -92,6 +105,7 @@
                 $('.fade-content').attr('data-number', number);
                 $('.fade-content .img').css({'background-image': 'url("/web/pictures/' + number + '.jpg")', 'background-position': 'center center', 'background-repeat': 'no-repeat'});
                 $('.fade-content input').prop('checked', false);
+                checkPicture(number);
                 $('.fade').stop(true, true).fadeIn();
                 $('.fade-content').stop(true, true).fadeIn();
             });

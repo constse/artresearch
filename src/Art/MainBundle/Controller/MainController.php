@@ -45,6 +45,24 @@ class MainController extends InitializableController
 
         $picture = $this->getRepository('Picture')->findOneByNumber($number);
 
+        if ($this->user->getLike()->contains($picture)) {
+            $this->user->getLike()->removeElement($picture);
+            $this->manager->persist($picture);
+            $this->manager->flush();
+        }
+
+        if ($this->user->getDislike()->contains($picture)) {
+            $this->user->getDislike()->removeElement($picture);
+            $this->manager->persist($picture);
+            $this->manager->flush();
+        }
+
+        if ($this->user->getSelf()->contains($picture)) {
+            $this->user->getSelf()->removeElement($picture);
+            $this->manager->persist($picture);
+            $this->manager->flush();
+        }
+
         switch ($action) {
             case 'like': $this->user->getLike()->add($picture); break;
             case 'dislike': $this->user->getDislike()->add($picture); break;
@@ -275,5 +293,20 @@ class MainController extends InitializableController
         $this->response->setContent($excel);
 
         return $this->response;
+    }
+
+    public function checkPictureAction($number)
+    {
+        if (!$this->request->isXmlHttpRequest()) throw $this->createNotFoundException();
+
+        $picture = $this->getRepository('Picture')->findOneByNumber($number);
+
+        if ($this->user->getLike()->contains($picture)) return new JsonResponse('like');
+
+        if ($this->user->getDislike()->contains($picture)) return new JsonResponse('dislike');
+
+        if ($this->user->getSelf()->contains($picture)) return new JsonResponse('self');
+
+        throw $this->createNotFoundException();
     }
 } 

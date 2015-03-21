@@ -17,13 +17,15 @@
     <div class="instructions" style="text-align: center;">
         <strong>Спасибо за Вашу помощь в проведении исследования!</strong>
     </div>
-    {{ form_start(form) }}
-    {{ form_row(form.nickname) }}
-    {{ form_row(form.sex) }}
-    {{ form_row(form.oil) }}
-    {{ form_row(form.age) }}
-    {{ form_row(form.education) }}
-    <p>Если Вы хотите узнать результаты, то укажите, пожалуйста, Ваш e-mail.</p>
-    {{ form_row(form.email) }}
-    {{ form_end(form) }}
+    {% if not user.finished %}
+        {{ form_start(form) }}
+        {{ form_row(form.nickname) }}
+        {{ form_row(form.sex) }}
+        {{ form_row(form.oil) }}
+        {{ form_row(form.age) }}
+        {{ form_row(form.education) }}
+        <p>Если Вы хотите узнать результаты, то укажите, пожалуйста, Ваш e-mail.</p>
+        {{ form_row(form.email) }}
+        {{ form_end(form) }}
+    {% endif %}
 {% endblock %}
