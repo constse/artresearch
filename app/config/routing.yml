@@ -31,6 +31,10 @@ check_picture:
 
 # 1
 
+clear:
+  path: /clear
+  defaults: { _controller: "ArtMainBundle:Main:clear" }
+
 admin:
   path: /admin
   defaults: { _controller: "ArtMainBundle:Main:admin" }

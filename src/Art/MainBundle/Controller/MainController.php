@@ -10,6 +10,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class MainController extends InitializableController
 {
+    public function clearAction()
+    {
+        $this->response->headers->clearCookie('user');
+        $this->response->setContent('<h1>Cookie успешно сброшены</h1>');
+
+        return $this->response;
+    }
+
     public function picturesAction($page = 1)
     {
         $pictures = $this->getRepository('Picture')->createQueryBuilder('p')
